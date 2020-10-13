@@ -6,14 +6,15 @@ function App() {
     return (
         <div className="container-fluid bg-light">
             <div className="page-header">
-                <h1>Fuck Your Neighbour <small>With <a href={"https://deckofcardsapi.com/"} target="_blank"
-                                                       rel="noopener noreferrer"
-                                                       className="text-secondary">CardAPI</a></small></h1>
+                <h1>Fuck Your Neighbour
+                    <small> With
+                        <a href={"https://deckofcardsapi.com/"} target="_blank" rel="noopener noreferrer"
+                           className="text-secondary"> CardAPI</a>
+                    </small>
+                </h1>
             </div>
             <Navigation/>
-            <div className="container bg-gradient-primary">
-                <Display/>
-            </div>
+            <Display/>
         </div>
     )
         ;
@@ -31,10 +32,12 @@ function Navigation() {
 
 function Display() {
     return (
-        <Switch>
-            <Route exact path="/" component={Join}/>
-            <Route path="/create" component={Create}/>
-        </Switch>
+        <div className="container bg-gradient-primary">
+            <Switch>
+                <Route exact path="/" component={Join}/>
+                <Route path="/create" component={Create}/>
+            </Switch>
+        </div>
     )
         ;
 }
@@ -57,7 +60,6 @@ function Create() {
             .then(result => setDeckId(result.deck_id))
         setAnzCards(5)
     }, [])
-
 
     useEffect(() => {
         if (player > 0) {
@@ -87,6 +89,7 @@ function Create() {
                         })
                 })
         }
+        // eslint-disable-next-line
     }, [player])
 
     function handleStart() {
@@ -99,10 +102,8 @@ function Create() {
                 break;
             case "tip":
                 break;
-
             default:
                 break;
-
         }
     }
 
@@ -110,11 +111,11 @@ function Create() {
         fetch(`https://deckofcardsapi.com/api/deck/${deckId}/pile/player${pile}/draw/?cards=${code}`)
             .then(res => res.json())
             .then(result => {
-                let index = piles[pile-1].findIndex(element => result.cards[0].code === element.code);
+                let index = piles[pile - 1].findIndex(element => result.cards[0].code === element.code);
                 if (index > -1) {
-                    let piless = piles;
-                    piless[pile-1].splice(index, 1);
-                    setPiles(piless);
+                    let zwPiles = piles;
+                    zwPiles[pile - 1].splice(index, 1);
+                    setPiles(zwPiles);
                 }
                 fetch(`https://deckofcardsapi.com/api/deck/${deckId}/pile/table/add/?cards=${result.cards[0].code}`)
                     .then(res => res.json())
@@ -128,7 +129,7 @@ function Create() {
             })
     }
 
-    let imgstyle = {
+    let imgStyle = {
         width: `${100 / anzCards}%`
     }
 
@@ -144,14 +145,16 @@ function Create() {
                    style={{display: game.state === "tip" ? "inline-block" : "none"}}/>
             <button onClick={handleStart}>{game.value}</button>
             {piles.map((pile, index) => (
+
                     <div key={`Div${index}`}>
                         <button onMouseDown={() => setShowPile(index)} onMouseUp={() => setShowPile(-1)}
                                 key={`Button${index}`}>Spieler {index + 1} </button>
                         <ul key={index} style={{display: showPile === index ? "block" : "none"}}>
+
                             {pile.map(card => (
-                                <li key={card.code} style={imgstyle} onClick={playCard.bind(this, card.code, (index + 1))}>
-                                    <img
-                                        src={card.image} alt={card.code}/></li>
+                                <li key={card.code} style={imgStyle} onClick={playCard.bind(this, card.code, (index + 1))}>
+                                    <img src={card.image} alt={card.code}/>
+                                </li>
                             ))}
                         </ul>
                     </div>
@@ -159,7 +162,9 @@ function Create() {
             )}
             <ul>
                 {table.map(card => (
-                    <li key={card.code} style={imgstyle}><img src={card.image} alt={card.code}/></li>
+                    <li key={card.code} style={imgStyle}>
+                        <img src={card.image} alt={card.code}/>
+                    </li>
                 ))}
             </ul>
         </div>
